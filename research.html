@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>East Asian Influence (ML) — Dennis Freyman</title>
+  <meta name="description" content="Detecting East Asian influence in Western classical piano with symbolic features and machine learning." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="container">
+
+    <a class="back-link" href="index.html">&larr; home</a>
+
+    <h1>Quantifying East Asian Influence</h1>
+    <p class="post-meta">Detecting cross-cultural influence in Western classical piano with symbolic features and machine learning.</p>
+
+    <div class="post-body">
+      <p>
+        This project tests whether East Asian influence in Western classical piano &mdash; the
+        gamelan- and pentatonic-derived writing found in Debussy and Ravel &mdash; can be detected
+        from symbolic musical features alone, and which features most reliably predict it. The
+        goal is to replace case-by-case subjective attribution with a systematic, reproducible
+        method.
+      </p>
+
+      <h2>Corpus &amp; labels</h2>
+      <ul>
+        <li>165 four-bar segments across 12 solo-piano works (piano-only, to control for instrumentation).</li>
+        <li>Influenced: Debussy (&ldquo;Pagodes,&rdquo; &ldquo;Et la lune descend,&rdquo; &ldquo;Cloches,&rdquo; &ldquo;Canope&rdquo;) and Ravel (&ldquo;Laideronnette&rdquo;). Controls: Bach, Beethoven, Mozart, Brahms.</li>
+        <li>Influence labels and per-segment feature scores assigned from documented musicological evidence.</li>
+      </ul>
+
+      <h2>Features</h2>
+      <p>
+        Nine symbolic features, each hand-scored on a 0&ndash;2 scale: pentatonicism, parallel
+        motion, density, rhythmic regularity, syncopation, melodic intervals, register usage,
+        articulation, and dynamics. Two are theory-motivated markers (pentatonicism, parallel
+        motion); the rest are exploratory controls to probe model sensitivity.
+      </p>
+
+      <h2>Model &amp; evaluation</h2>
+      <ul>
+        <li><strong>Random Forest</strong> &mdash; chosen for interpretability and data-efficiency on a small, mixed-scale tabular set, where linear models assume separability and deep nets overfit at n=165.</li>
+        <li><strong>Group-aware throughout</strong> to prevent leakage between segments of the same piece: a frozen ≈65/35 grouped hold-out (GroupShuffleSplit) plus grouped 5-fold StratifiedGroupKFold for descriptive analysis.</li>
+        <li>Hyperparameters tuned by RandomizedSearchCV on positive-class F1; final model <code>n_estimators=200, max_depth=10</code>, fixed seed.</li>
+      </ul>
+
+      <h2>Results</h2>
+      <ul>
+        <li>Hold-out: accuracy 0.656, balanced accuracy 0.658, <strong>AUROC 0.809</strong>, AUPRC 0.875 for the influenced class.</li>
+        <li>Precision 0.750 / recall 0.649 &mdash; the model is conservative: it ranks segments well but under-calls borderline influence.</li>
+        <li><strong>Pentatonicism dominates</strong> &mdash; ~32% of all depth-≤2 tree splits and the largest hold-out permutation hit (ΔAUPRC ≈ −0.20). It acts as a gate: sustained pentatonic writing drives an &ldquo;influenced&rdquo; call; without it, noisier mid-tier cues (syncopation, density, parallel motion, articulation) decide.</li>
+        <li>In practice: clean rejection of canonical Western works, oscillation on &ldquo;Pagodes&rdquo; as textures shift, and clustered false positives on short controls where mid-tier cues align without pentatonic support.</li>
+      </ul>
+
+      <h2>Takeaways &amp; stack</h2>
+      <p>
+        The model confirms pentatonicism as the central marker (matching the literature) and
+        surfaces syncopation and density as unexpected conditional amplifiers &mdash; while exposing
+        how coarse symbolic coding flattens timbre, pedaling, and resonance. Built with Python:
+        scikit-learn (Random Forest), music21 for symbolic parsing, pandas, NumPy, SciPy, and
+        matplotlib. Fully reproducible &mdash; fixed seed, frozen split, and committed predictions
+        and model.
+      </p>
+
+      <p><a href="https://github.com/zarfix123/pioneer25">Code &amp; data on GitHub &rarr;</a></p>
+    </div>
+
+  </main>
+</body>
+</html>
