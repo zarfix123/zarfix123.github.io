@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Notivox — Dennis Freyman</title>
-  <meta name="description" content="Notivox — turn a recording into editable, transposable music notation." />
+  <meta name="description" content="Notivox — a Python engine that transcribes monophonic recordings into notes." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
@@ -16,42 +16,43 @@
     <a class="back-link" href="index.html">&larr; home</a>
 
     <h1>Notivox</h1>
-    <p class="post-meta">A tool that turns a recording into music you can edit.</p>
+    <p class="post-meta">A Python engine that transcribes monophonic recordings into notes.</p>
 
     <div class="post-body">
       <p>
-        Notivox takes an audio or video file, pulls out the main melody, and turns it
-        into notation you can actually work with &mdash; transpose it, adapt it to another
-        instrument, and export a clean score. It started as a way to transcribe my
-        grandfather&rsquo;s cello playing: the slides and phrasing that a plain <code>.wav</code>
-        file flattens into a list of numbers.
+        Notivox takes a single-line recording &mdash; a solo cello or violin, say &mdash; and turns
+        it into a sequence of pitched note events with start/end times and quantized durations.
+        The work so far is the transcription engine itself: pitch detection, note segmentation,
+        and rhythm estimation.
       </p>
 
-      <h2>What it does</h2>
+      <h2>Pitch detection</h2>
+      <p>Two backends, built to compare against each other:</p>
       <ul>
-        <li><strong>Transcribe</strong> &mdash; upload audio/video and extract the lead melody as notation.</li>
-        <li><strong>Transpose</strong> &mdash; shift the melody to any key.</li>
-        <li><strong>Re-voice</strong> &mdash; adapt it for a different instrument (piano, guitar, flute&hellip;).</li>
-        <li><strong>Two modes</strong> &mdash; a rule-based pass for predictable cleanup, or an AI mode using pitch-tracking models for trickier audio.</li>
-        <li><strong>Export</strong> &mdash; download the cleaned-up score as PDF or MIDI.</li>
+        <li><strong>CREPE</strong> &mdash; a deep-learning pitch tracker, run with Viterbi smoothing and confidence thresholds.</li>
+        <li><strong>YIN (aubio)</strong> &mdash; a classic autocorrelation tracker, fed through a Butterworth band-pass (~200&ndash;1200 Hz) first.</li>
+      </ul>
+      <p>
+        The CREPE path is multi-pass and onset-aware: a coarse librosa onset pass splits the
+        audio into fast/slow regions, then CREPE runs with an adaptive step size (finer through
+        fast passages), and a third pass re-scans long gaps at a micro step size &mdash; labeling
+        genuine silence as rests.
+      </p>
+
+      <h2>Note &amp; rhythm cleanup</h2>
+      <ul>
+        <li>Frame-level pitches snap to the nearest semitone (via MIDI) and group into note segments.</li>
+        <li>Segments are filtered by a minimum duration and merged across identical neighbors.</li>
+        <li>A vibrato heuristic collapses brief one-semitone A&ndash;B&ndash;A wobbles into a single note.</li>
+        <li>A separate pass estimates tempo (librosa beat tracking), then quantizes inter-onset intervals to standard note values &mdash; quarter, eighth, sixteenth, and so on.</li>
       </ul>
 
-      <h2>Generate &amp; interact</h2>
+      <h2>Stack</h2>
       <p>
-        Beyond transcription, Notivox can generate music from a plain-language prompt
-        (&ldquo;a jazzy line in D minor&rdquo;) and render it as sheet music. You can also
-        interact with a melody you uploaded &mdash; for example, &ldquo;write a harmony using
-        only I&ndash;IV&ndash;V chords for this melody.&rdquo;
+        Python &mdash; librosa, CREPE, aubio, NumPy, and SciPy, with matplotlib for visualizing
+        pitch tracks. A Flask web interface (upload &rarr; transcribe) is scaffolded; for now the
+        pipeline runs from the command line.
       </p>
-
-      <h2>Under the hood</h2>
-      <p>
-        Audio processing in Python (LibROSA, Essentia) with music analysis via music21;
-        AI transcription using pitch-tracking models (CREPE / SPICE) and generation through
-        the OpenAI API; notation rendered with LilyPond / ABCjs and exported to PDF and MIDI.
-      </p>
-
-      <p><a href="https://github.com/zarfix123/Notivox">View the repo on GitHub &rarr;</a></p>
     </div>
 
   </main>
