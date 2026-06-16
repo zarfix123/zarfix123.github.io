@@ -36,9 +36,10 @@ body {
 
 /* ===== Typography ===== */
 h1 {
-  font-size: 1.9rem;
-  font-weight: 700;
-  letter-spacing: -0.01em;
+  font-family: "Fraunces", Georgia, serif;
+  font-size: 2.2rem;
+  font-weight: 600;
+  letter-spacing: -0.005em;
   margin: 0 0 0.6rem;
 }
 
@@ -170,10 +171,11 @@ a:hover { text-decoration: underline; }
 }
 .post-body { font-size: 0.95rem; }
 .post-body h2 {
+  font-family: "Fraunces", Georgia, serif;
   letter-spacing: normal;
   color: var(--text);
-  font-size: 1.2rem;
-  font-weight: 700;
+  font-size: 1.45rem;
+  font-weight: 600;
   margin: 2.25rem 0 0.9rem;
 }
 .post-body p { margin: 0 0 1.2rem; }
@@ -203,5 +205,5 @@ pre code { background: none; padding: 0; border-radius: 0; }
 /* ===== Mobile ===== */
 @media (max-width: 600px) {
   .container { padding: 3rem 1.25rem; }
-  h1 { font-size: 1.65rem; }
+  h1 { font-size: 1.9rem; }
 }
