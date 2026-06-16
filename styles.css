@@ -159,21 +159,8 @@ a:hover { text-decoration: underline; }
   font-size: 0.85rem;
   margin-bottom: 2.5rem;
 }
-.post-list { list-style: none; padding: 0; margin: 2.5rem 0 0; }
-.post-list li { margin-bottom: 1.5rem; }
-.post-list .post-title { font-weight: 700; color: var(--text); }
-.post-list .post-title:hover { color: var(--accent); }
-.post-list .post-date {
-  display: block;
-  color: var(--muted);
-  font-size: 0.8rem;
-  margin-bottom: 0.15rem;
-}
-.post-list .post-blurb {
-  color: var(--muted);
-  font-size: 0.9rem;
-  margin: 0.2rem 0 0;
-}
+.post-cards { margin-top: 2.5rem; }
+.post-feature + .post-feature { margin-top: 1rem; }
 
 /* ===== Blog post ===== */
 .post-meta {
