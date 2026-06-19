@@ -84,6 +84,52 @@ a:hover { text-decoration: underline; }
 }
 .projects li { margin-bottom: 1.75rem; }
 .projects li:last-child { margin-bottom: 0; }
+/* "live" badge on the flagship project (Tolus): green pulsing dot + readable label */
+.live {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+}
+
+/* flagship project (Tolus): black-bordered box with a "live" badge top-right */
+.projects li.featured {
+  position: relative;
+  border: 1px solid var(--text);
+  border-radius: 8px;
+  padding: 1.15rem 1.25rem;
+  margin: 0 -1.25rem 1.85rem;
+}
+.projects li.featured .live {
+  position: absolute;
+  top: 1rem;
+  right: 1.25rem;
+}
+.live-dot {
+  position: relative;
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #21a366;
+}
+.live-dot::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: #21a366;
+  animation: live-ping 1.5s ease-out infinite;
+}
+@keyframes live-ping {
+  0%   { transform: scale(1);   opacity: 0.6; }
+  100% { transform: scale(2.8); opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .live-dot::after { animation: none; }
+}
 
 .proj-name {
   font-family: "Fraunces", Georgia, serif;
