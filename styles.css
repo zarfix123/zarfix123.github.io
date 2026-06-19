@@ -190,6 +190,19 @@ a:hover { text-decoration: underline; }
 .post-body ul, .post-body ol { margin: 0 0 1.2rem; padding-left: 1.4rem; }
 .post-body li { margin-bottom: 0.6rem; }
 .post-body a { text-decoration: underline; }
+.post-body figure { margin: 1.6rem 0; }
+.post-body img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+.post-body figcaption {
+  color: var(--muted);
+  font-size: 0.82rem;
+  margin-top: 0.5rem;
+}
 
 /* ===== Code ===== */
 code {
