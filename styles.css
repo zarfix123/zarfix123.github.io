@@ -190,10 +190,10 @@ a:hover { text-decoration: underline; }
 .post-body ul, .post-body ol { margin: 0 0 1.2rem; padding-left: 1.4rem; }
 .post-body li { margin-bottom: 0.6rem; }
 .post-body a { text-decoration: underline; }
-.post-body figure { margin: 1.6rem 0; }
+.post-body figure { margin: 2.75rem auto; max-width: 78%; }
 .post-body img {
   display: block;
-  max-width: 100%;
+  width: 100%;
   height: auto;
   border: 1px solid var(--border);
   border-radius: 8px;
@@ -201,7 +201,8 @@ a:hover { text-decoration: underline; }
 .post-body figcaption {
   color: var(--muted);
   font-size: 0.82rem;
-  margin-top: 0.5rem;
+  margin-top: 0.65rem;
+  text-align: center;
 }
 
 /* ===== Code ===== */
@@ -227,4 +228,5 @@ pre code { background: none; padding: 0; border-radius: 0; }
 @media (max-width: 600px) {
   .container { padding: 3rem 1.25rem; }
   h1 { font-size: 1.9rem; }
+  .post-body figure { max-width: 100%; }
 }
