@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Beacon — Dennis Freyman</title>
+  <meta name="description" content="Beacon, a permissioned knowledge network where you ask once and each party decides what it shares." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="container">
+
+    <a class="back-link" href="index.html">&larr; home</a>
+
+    <h1>Beacon</h1>
+    <p class="post-meta">Ask a question once, and every party&rsquo;s gate decides what it&rsquo;s willing to share.</p>
+
+    <div class="post-body">
+      <p>
+        Most problems are already solved somewhere. The catch is there&rsquo;s no safe way to ask
+        across a boundary and get back exactly what the owner is willing to share, so everyone just
+        ends up redoing the work. That&rsquo;s the gap Beacon goes after. You ask a question once, it
+        fans out to a pool of independent parties, and each one searches only its own private
+        knowledge and decides, right at its own boundary, what it&rsquo;ll let cross. That&rsquo;s
+        either the full answer, a redacted &ldquo;this exists but it&rsquo;s locked&rdquo; stub, or
+        nothing at all. Everything that does cross gets verified against its source, and you get back
+        one synthesized, cited answer.
+      </p>
+
+      <h2>The gate</h2>
+      <p>
+        The hard part was never the search, it was the gate. Making sharing safe is the thing that
+        unlocks everything else, so instead of trusting ourselves to remember to filter restricted
+        stuff out, we built the no-leak in by shape. The object that crosses a boundary is a frozen
+        record that physically has no field to hold raw restricted text, so a leak isn&rsquo;t
+        something you catch, it&rsquo;s something that&rsquo;s impossible to even express. Two
+        independent checks decide what crosses, visibility and capability, and both the redaction and
+        the grounding-check run as Claude calls inside each party. Verification fails closed, so if an
+        answer can&rsquo;t be grounded it never shows up as verified, which also means made-up
+        citations get caught instead of passed along.
+      </p>
+
+      <h2>Retrieval</h2>
+      <p>
+        Each party keeps its own isolated index of just its own chunks. The search is hybrid, BM25 on
+        the lexical side fused with static CPU embeddings (model2vec) through Reciprocal Rank Fusion,
+        and it runs over about 4,300 real document chunks in roughly 10 to 18 ms with no GPU at all.
+      </p>
+
+      <h2>Spine &amp; MCP</h2>
+      <p>
+        A router fans out to every party, streams the answer back token by token as it gets
+        synthesized, and when you ask for access to something that came back locked, it re-streams
+        just that one card live instead of re-running everything. Beacon also exposes itself as an MCP
+        server, so you can query the whole network straight from Claude Desktop or Claude Code, and the
+        gate comes along with it.
+      </p>
+
+      <h2>Stack</h2>
+      <p>
+        Python on the backend, FastAPI with asyncio and websockets, rank-bm25 and model2vec and NumPy
+        handling retrieval, the Anthropic API for redaction, verification, and synthesis, and FastMCP
+        for the MCP layer. React and Vite on the front end. We built it at a hackathon.
+      </p>
+
+      <p>
+        <a href="https://github.com/zarfix123/beacon">Code on GitHub &rarr;</a><br />
+        <a href="https://devpost.com/software/beacon-z5b9nh">Devpost submission &rarr;</a>
+      </p>
+    </div>
+
+  </main>
+</body>
+</html>
