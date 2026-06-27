@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Make Your Value Obvious — Dennis Freyman</title>
+  <meta name="description" content="We lost the Berkeley AI Hackathon with our best project, and learned that if your value isn't obvious in three minutes, it doesn't count." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../../styles.css" />
+</head>
+<body>
+  <main class="container">
+
+    <a class="back-link" href="../index.html">&larr; all posts</a>
+
+    <article>
+      <h1>Make Your Value Obvious</h1>
+      <p class="post-meta">June 26, 2026</p>
+
+      <div class="post-body">
+        <p>
+          A hackathon is an interesting thing. In principle, it&rsquo;s great. Everyone builds
+          software quickly, it gets judged, usually on feasibility, impact, technical level, etc.,
+          and then someone wins a prize and sometimes pursues that project further. Makes sense.
+        </p>
+
+        <p>
+          Going into the Berkeley AI Hackathon 2026 this year, Hao and I had a pretty good track
+          record. 1st at the Reddit Games hackathon, 2nd at the USC ISI hackathon. We thought we
+          knew what a good project meant. Going in, our idea was simple, but we thought it was cool.
+        </p>
+
+        <p>
+          Physics real time visualization. You record a video -&gt; we use Claude vision to pick
+          keyframes -&gt; we do arithmetic to figure out relative velocities of the primary object
+          in the video -&gt; user gets a cool visual of the video but in a physics x-ray. Think a
+          tab for Newton diagrams, one for momentum, one for energy, etc. The pitch was going to be
+          something along the lines of &ldquo;Gizmos for Physics&rdquo; from an education standpoint.
+        </p>
+
+        <p>
+          The day before the hackathon, we stumbled upon an idea we thought was really cool, but
+          tough to build. It came from the idea that in big tech companies, it&rsquo;s very common
+          for engineers to be separated into teams. Take Amazon. I&rsquo;m sure there&rsquo;s a
+          payment and a cloud and devops and every team in existence, but all of them are building
+          on Amazon infrastructure. The idea is based on the fact that those developers are very
+          likely to work on the same problems over and over again, but there&rsquo;s no way
+          currently to fix this. Our suggestion: a permissioned knowledge sharing network for
+          agents. I&rsquo;m working on a problem -&gt; my agent asks other agents in my company/team
+          if they&rsquo;ve worked on the project before -&gt; that agent raises its hand and shares
+          its info.
+        </p>
+
+        <p>
+          At the core, this idea seems much more useful and practical, and so we went with it, and
+          I&rsquo;d say we built it pretty well. Feel free to read more about the technical specs
+          <a href="../../beacon.html">here</a>. Little did I know, we were so very wrong.
+        </p>
+
+        <p>There are three main problems with building something like this at a hackathon:</p>
+
+        <ol>
+          <li>It&rsquo;s hard technically to do well.</li>
+          <li>It&rsquo;s a dev tool, the most crowded category in any hackathon.</li>
+          <li>There&rsquo;s no cool &ldquo;aha&rdquo; moment that we can show.</li>
+        </ol>
+
+        <p>
+          At this hackathon, the format was that 3 projects from our category made it to the finals.
+          In our category, the three teams that made it were:
+        </p>
+
+        <ol>
+          <li>A generic AI agent red-teaming tool.</li>
+          <li>A tool that takes pictures and turns them into 3D renders.</li>
+          <li>A spin on the Playwright tool for Claude.</li>
+        </ol>
+
+        <p>
+          We felt our project was more intricate and interesting than everything that made it to the
+          finals. The thing is, that&rsquo;s not what matters at a hackathon. I&rsquo;d say out of
+          the 3 problems I mentioned, the biggest to consider is the third one, the aha moment. The
+          thing with these hackathons, and hackathons in general, is you get maybe 3 to 5 minutes to
+          present your project. The person that&rsquo;s watching your demo has just seen 10 other
+          projects and wants to move on. You&rsquo;ve gotta grab their attention and make them
+          remember you. Although we had the coolest tech and a cool project, it was at the core an
+          integration into Claude Code/Desktop that made 1 command work. Our UI was a simple
+          visualization of agents talking to each other. No matter the practicality, that&rsquo;s not
+          as appealing to a judge as a 3D render being made in front of them.
+        </p>
+
+        <p>
+          What&rsquo;s fascinating about this idea is that we did it so well at our first hackathon,
+          the USC one I mentioned. We built reTeach (reteach.works), which was a simple tool that
+          made students take a quiz and based on the prerequisites they were missing it would map
+          them catch-up assignments. It&rsquo;s simple, but the judges immediately get it. The
+          <strong>value</strong> is obvious. Although Beacon has value in its own way, it&rsquo;s not
+          the easiest thing to make that obvious in 3 minutes. Our first judge liked our demo, but it
+          makes sense why the other projects advanced and we didn&rsquo;t. Later on we got judged by
+          another judge that was just lurking after the real judging period, who we got to talk to
+          for about 15 minutes. In that time span, he was really able to understand our project and
+          actually offered to support us in the future. That guy was Kenny Zhang (3x YC). The thing
+          is, that proves the point of quick attention further. At a hackathon you have to make
+          something that makes sense immediately.
+        </p>
+
+        <p>
+          This lesson goes much further than hackathons. It&rsquo;s applicable to selling any
+          software ever. It doesn&rsquo;t matter if you are getting judged by a tech founder or
+          selling to a school admin, you have to make value obvious. Products whose value is hidden
+          in a maze of jargon really have no value at all to others. So although yes, we lost the
+          hackathon, I see it as a huge win.
+        </p>
+
+        <p>
+          First of all, we built some really cool technical software I&rsquo;m proud of and I can
+          talk about in the future, but most of all, we learned an important lesson the hard way.
+          Make your value obvious. Make sure the person you are talking to understands exactly why
+          they need what you have. Make sure the person who&rsquo;s listening understands what they
+          are being sold.
+        </p>
+
+        <p>
+          But I can&rsquo;t end on a loss of course, so we&rsquo;ll see how CalHacks goes in October
+          :).
+        </p>
+      </div>
+    </article>
+
+  </main>
+</body>
+</html>
