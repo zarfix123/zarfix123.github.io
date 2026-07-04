@@ -157,6 +157,7 @@ a:hover { text-decoration: underline; }
 
 /* Standalone body link (e.g. awards on the homepage) */
 .standalone-link { font-weight: 500; font-size: 0.95rem; }
+.projects + .standalone-link { display: inline-block; margin-top: 1.6rem; }
 
 /* ===== Latest-post feature (homepage) ===== */
 .post-feature {
