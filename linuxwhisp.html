@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>linuxwhisp — Dennis Freyman</title>
+  <meta name="description" content="linuxwhisp, a hold-to-talk dictation daemon for Linux where the audio never leaves the machine." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="container">
+
+    <a class="back-link" href="index.html">&larr; home</a>
+
+    <h1>linuxwhisp</h1>
+    <p class="post-meta">Hold-to-talk dictation for Linux. The audio never leaves the machine.</p>
+
+    <div class="post-body">
+      <p>
+        Hold Right Ctrl, talk, let go, and the cleaned text lands at your cursor. A Whisper model costs
+        1 to 2 seconds to load, so spawning a process per keypress would be unusable. linuxwhisp runs
+        resident instead, holds two models warm, and does nothing until you press the key. Transcription
+        is entirely local and audio never leaves the machine in any phase, which is the property the
+        rest of the design exists to protect.
+      </p>
+
+      <h2>The hotkey</h2>
+      <p>
+        The obvious approach is a keyboard grab, and it is wrong. A core <code>XGrabKey</code> on Right
+        Ctrl consumes the key, which breaks Ctrl+C, Ctrl+V and every other right-hand chord system wide.
+        What works is XRecord, a passive tap on the X event stream, so the focused application still
+        receives the key normally while the daemon watches it.
+      </p>
+      <p>
+        That creates a problem worth being explicit about. XRecord is the X keylogging API, and it sees
+        every keystroke on the system including passwords typed into other windows. So the discard sits
+        above every other branch in the handler: anything that isn&rsquo;t our keycode is dropped before
+        it can be logged, buffered, or handed to another function. One key covers hold, tap-to-latch and
+        double-tap, separated by timing rather than by carving out more keys.
+      </p>
+
+      <h2>Live text, and why it never gets injected</h2>
+      <p>
+        Whisper is not a streaming model. Re-transcribing a growing buffer produces text whose tail keeps
+        changing, so a raw preview would rewrite itself constantly. LocalAgreement-2 fixes that: a word
+        is confirmed once two consecutive passes agree on it, confirmed words render solid, everything
+        after them renders dim. The subtle part is that agreement alone is not enough, because two passes
+        over nearly identical short audio will happily agree on the same wrong guess and a confirmed word
+        is never revisited. So no word ending within a second of the buffer&rsquo;s edge can be confirmed
+        at all. Without that guard, one benchmark sample went from 5.0% to 22.5% word error, permanently.
+      </p>
+      <p>
+        The live pass never contributes to the injected text. It is preview only. The transcript that
+        ships comes from a second, larger model run over the complete audio after the key comes up, which
+        is why a jittery preview can never corrupt the result.
+      </p>
+
+      <h2>The overlay</h2>
+      <p>
+        The status surface has to be visible and must never take focus, because if it accepts focus then
+        both your keystrokes and the injection go to it instead of the application you are dictating into.
+        It is a genuine X11 <code>override_redirect</code> window, unfocusable by construction rather than
+        by convention, with a runtime assertion so a Qt upgrade that silently changes it fails loudly
+        instead of breaking injection mysteriously.
+      </p>
+      <p>
+        It also exists to avoid what the commercial tools do. Typing raw text into the target window and
+        then selecting it back to replace it with the cleaned version is why those tools are flaky, since
+        it breaks against autocomplete, markdown renderers and editor auto-indent. Feedback happens in a
+        surface linuxwhisp controls, and injection into the foreign application happens exactly once, with
+        final text.
+      </p>
+
+      <h2>Cleanup, and the failure rule</h2>
+      <p>
+        Cleanup is a Haiku call over the text, never the audio, in one of two modes chosen from the focused
+        window&rsquo;s <code>WM_CLASS</code>. Prompt mode strips filler and preserves identifiers, paths and
+        flags exactly. Prose mode handles punctuation and capitalisation.
+      </p>
+      <p>
+        The hard part is that people dictate messages to AI assistants, so a transcript reads like a request.
+        Sent plainly, &ldquo;this is a test of your implementation&rdquo; gets answered, and the answer gets
+        typed at your cursor. Three guards stop it: the transcript arrives inside delimiters described as a
+        recording made before the model existed, anything under 16 characters skips the API entirely, and a
+        response longer than twice the input is rejected as the model talking rather than cleaning. Every
+        failure path injects the raw transcript rather than losing your words, and says so on the overlay.
+      </p>
+
+      <h2>What didn&rsquo;t work</h2>
+      <p>
+        Four separate attempts at near-realtime output failed. Hard time cuts were 1.8&times; faster and
+        pushed word error from 9.5% to 15.5%, with one sample going from 2.5% to 37.5%, because Whisper
+        mangles the partial words on both sides of a mid-utterance seam. Cutting at detected silences was
+        safe but almost never fired, since real dictation averages 1.6 usable silences per 20 seconds.
+        Using the live agreement text as the final transcript cost 8 points of accuracy outright.
+      </p>
+      <p>
+        The tension is structural rather than a tuning problem. Confirm early and it is fast but wrong,
+        confirm late enough to be accurate and there is no time left to save. A local cleanup model was cut
+        for a related reason: 5 to 7 seconds against Haiku&rsquo;s 1, and being memory bandwidth bound it
+        would have turned the one idle second in the pipeline into the heaviest CPU event on the machine.
+      </p>
+
+      <h2>Stack</h2>
+      <p>
+        Python. faster-whisper for transcription, webrtcvad for the speech gate, sounddevice and PortAudio
+        for capture, PyQt5 for the overlay and the correction panel, python-xlib and xdotool for the X11
+        work, and the Anthropic API for cleanup. 15 modules, 176 tests that run headless and offline, and
+        exactly one module that knows the whole flow.
+      </p>
+
+      <p>
+        <a href="https://github.com/zarfix123/linuxwhisp">Code on GitHub &rarr;</a>
+      </p>
+    </div>
+
+  </main>
+</body>
+</html>
