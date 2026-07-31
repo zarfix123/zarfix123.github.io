@@ -1,3 +1,6 @@
 # Local preview artifacts
 .playwright-mcp/
 preview-*.png
+
+# Writing notes, local only
+blog/STYLE.md
